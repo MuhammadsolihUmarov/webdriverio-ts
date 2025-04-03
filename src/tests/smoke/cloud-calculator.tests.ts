@@ -1,54 +1,35 @@
-import "dotenv/config";
-import { CalculatorPage } from "../../pageObject/calculator_page";
-const chai = require('chai');
+import { expect } from 'chai';
+import { CalculatorPage } from '../../pageObject/CalculatorPage';
 
 const calculatorPage = new CalculatorPage();
 
-const okCookieButton = process.env['LOCALE'] === 'en' ? 'OK, got it' : 'OK';
-
 describe('Cloud Calculator', () => {
   before(async () => {
-    // @ts-ignore
-    await calculatorPage.open();
-    const okButton = await $(`//*[text()="${okCookieButton}"]`);
-    await okButton.click();
+    await calculatorPage.open()
+        .acceptCookiesIfAppear();
   });
 
-  it('Should be able to add new entities into the calculator', async () => {
-    console.log('First test');
-
-    // @ts-ignore
-    await calculatorPage.open();
-
+  it('should open the calculator URL', async() => {
     const url = await browser.getUrl();
-    chai.expect(url).to.be.equal(browser.config.baseUrl + '/products/calculator');
-
-    await expect(calculatorPage.addEstimateButton()).toBeDisplayed();
-
-    const addEstimateButton = await calculatorPage.addEstimateButton();
-    addEstimateButton.click();
-
-    const addEstimationModalWindow = await calculatorPage.addEstimationModalWindow();
-
-    await browser.pause(150);
-    chai.expect(await addEstimationModalWindow.isDisplayed()).to.be.true;
-
-    const computeEngineElement = await $('//h2[text()="Compute Engine"]');
-    await computeEngineElement.click();
-
-    await expect(calculatorPage.configurationBlock()).toBeDisplayed();
+    const baseUrl = browser.options.baseUrl;
+    expect(url).to.equal(`${baseUrl}/products/calculator`);
   });
 
-  it("Should be able to add two new instances", async () => {
-    console.log(`Second test`);
+  it('should add new entities to calculator', async () => {
+    await calculatorPage.clickAddEstimate();
+    await calculatorPage.selectComputeEngine();
 
-    $('.QiFlid [aria-label="Increment"] .wX4xVc-Bz112c-RLmnJb').then(addNewInstanceButton => {
-      for (let i = 0; i <= 2; i++) {
-        addNewInstanceButton.click();
-      }
-    });
+    const isConfigDisplayed = await calculatorPage.verifyConfigurationBlock();
+    expect(isConfigDisplayed).to.be.true;
+  });
 
-    const threeInstancesCostUSD = '$417.30';
-    await expect($('.egBpsb .MyvX5d.D0aEmf')).toHaveText(threeInstancesCostUSD);
+  it('should correctly add two new instances', async () => {
+    await calculatorPage.clickAddEstimate();
+    await calculatorPage.selectComputeEngine();
+
+    await calculatorPage.addInstances(2);
+
+    const totalCost = await calculatorPage.getTotalCost();
+    expect(totalCost).to.equal('$419.10');
   });
 });

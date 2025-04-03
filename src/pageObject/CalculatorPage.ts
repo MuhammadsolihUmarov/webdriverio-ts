@@ -1,14 +1,15 @@
 import { BasePage } from "./BasePage";
+import { getText } from "../config/locales";
 
 export class CalculatorPage extends BasePage {
   constructor() {
     super('/products/calculator');
   }
 
-  private okCookieButton = `//*[contains(text(), "${process.env['LOCALE'] === 'en' ? 'OK, got it' : 'OK'}")]`;
-  private addEstimateButtonLocator = '//span[text()="Add to estimate"]';
-  private configurationBlockLocator = '//h2[text()="Instances"]';
-  private computeEngineLocator = '//h2[text()="Compute Engine"]';
+  private okCookieButton = `//*[contains(text(), "${getText('okCookie')}")]`;
+  private addEstimateButtonLocator = `//span[text()="${getText('addToEstimate')}"]`;
+  private configurationBlockLocator = `//h2[text()="${getText('instancesHeader')}"]`;
+  private computeEngineLocator = `//h2[text()="${getText('computeEngine')}"]`;
   private incrementButtonLocator = '.QiFlid [aria-label="Increment"]';
   private totalCostLocator = '//div[@class="KgqeZe"]/label';
 

@@ -1,6 +1,7 @@
-import moment from 'moment'
+// @ts-ignore
+import moment from 'moment';
 
-let startTime: moment.Moment
+let startTime: moment.Moment;
 
 export const config = {
   autoCompileOpts: {
@@ -27,8 +28,8 @@ export const config = {
         args: [
           '--log-level=3',
           '--silent',
-          '--ignore-certificate-errors', // recommended if SSL handshake errors persist
-          '--disable-logging',           // suppress additional browser logs
+          '--ignore-certificate-errors',
+          '--disable-logging',
         ],
       },
     },
@@ -58,18 +59,21 @@ export const config = {
   },
 
   async before() {
+    // @ts-ignore
     const { width, height } = await browser.execute(() => {
       return {
         width: window.screen.availWidth,
         height: window.screen.availHeight,
       };
     });
+    // @ts-ignore
     await browser.setWindowSize(width, height);  },
 
   async afterTest(_test, _context, { error }) {
     if (error) {
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       const filepath = `./logs/screenshots/test-fail-${timestamp}.png`;
+      // @ts-ignore
       await browser.saveScreenshot(filepath);
     }
     },

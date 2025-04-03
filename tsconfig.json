@@ -18,6 +18,13 @@
     "newLine": "lf",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "@wdio/mocha-framework", "webdriverio/async", "expect-webdriverio"]
-  }
+    "types": ["node", "@wdio/mocha-framework", "@wdio/globals/types", ,"webdriverio/async", "expect-webdriverio"],
+  },
+  "include": [
+    "src/**/*.ts",
+    "node_modules/@wdio/globals/types.d.ts",
+    "node_modules/@wdio/globals/types.d.ts",
+    "node_modules/@wdio/globals/types.d.ts"
+  ],
+  "exclude": ["node_modules"]
 }
